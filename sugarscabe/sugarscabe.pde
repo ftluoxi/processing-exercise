@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 class agent{
   int vision;
   int stomach;
@@ -6,8 +7,9 @@ class agent{
   int status;
   int sugarbag;
   int locx, locy;
+  int id;
   
-  /*initialize the sugarbag\status\vision\stomach\step and location of an agent
+  /*initialize the sugarbag\status\vision\stomach\step\location\id of an agent
     sugarbag:the sugar amount when an agent was born;
     status:dead or live
     vision:the ability to find sugar
@@ -15,6 +17,7 @@ class agent{
     step:the step of an agent, it means the movement ability to go through the sugar-
     scape
     location:locx,locy, the location of an agent born in sugarscabe
+    id:to identify an agent
   */
   agent(){
     vision = (int)random(2, 11);
@@ -24,6 +27,7 @@ class agent{
     locy = (int)random(100, 500)/10;
     status = 1;
     sugarbag = (int)random(11, 20);
+    id = (int) random(10, 100);
   }
   
   void updateStatus() {
@@ -261,6 +265,7 @@ class agentSystem {
   ArrayList<agent> agents;
   int N;
   int rounds;
+  PrintWriter fos;
   
   agentSystem(int size) {
     agents = new ArrayList<agent>();
@@ -294,12 +299,40 @@ class agentSystem {
     }
   }
   
+  void writeLog() {
+    if (N >= 0) {
+      if (rounds <= 1) {
+        fos = createWriter("agentslog.txt");
+      }
+      Iterator<agent> it = agents.iterator();
+      while(it.hasNext()) {
+        agent a = it.next();
+        int[] outputline = new int[8];
+        outputline[0] = a.id;
+        outputline[1] = a.sugarbag;
+        outputline[2] = a.locx;
+        outputline[3] = a.locy;
+        outputline[4] = a.vision;
+        outputline[5] = a.stomach;
+        outputline[6] = a.step;
+        outputline[7] = rounds;
+        fos.println(outputline[0]+" "+outputline[1]+" "+outputline[2]+" "+outputline[3]+
+        " "+outputline[4]+" "+outputline[5]+" "+outputline[6]+" "+outputline[7]);
+        
+      }
+      fos.println("############" + "rounds:" + rounds + "############");
+    }
+  }
   
+  void stopWriting() {
+    fos.flush();
+    fos.close();
+  }
   
 }
 
 sugarscape sugartest = new sugarscape(50, 50, 1);
-agentSystem a = new agentSystem(1000);
+agentSystem a = new agentSystem(10);
 
 int xoff = 20; int yoff = 20;
 void setup() {
