@@ -1,11 +1,12 @@
 void draw() {
-  if (a.rounds % 5 == 0) {
+  if (a.rounds % 2 == 0) {
     sugartest.updateSugarscape();
     //print("**************************************new sugar coming************************************** ");
     
   }
   a.writeLog();
   sugartest.displaySugarscape();
+  print(sugartest.sugartable_iter[25][25]);
   a.updateSystem(sugartest);
   a.displaySystem();
 }

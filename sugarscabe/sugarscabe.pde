@@ -27,7 +27,7 @@ class agent{
     locy = (int)random(100, 500)/10;
     status = 1;
     sugarbag = (int)random(11, 20);
-    id = (int) random(10, 100);
+    id = (int) random(10, 1500);
   }
   
   void updateStatus() {
@@ -228,7 +228,54 @@ class sugarscape {
       }
     }
     
+    if (type == 3) {//bivariate normalize distribution
+      int[] pmiu1 = {(int) random(0.2*w, 0.5*w), (int) random(0.2*h, 0.8*h)};
+      int[] ptheta1 = {1, 1};
+      float prho1 = 0;
+      int[] pmiu2 = {(int) random(0.5*w, 0.8*w), (int) random(0.2*h, 0.8*h)};
+      int[] ptheta2 = {1, 1};
+      float prho2 = 0;
+      float termp1_1 = 2*PI*ptheta1[0]*ptheta1[1]*sqrt(1-pow(prho1, 2));
+      float termp2_1 = 2*PI*ptheta2[0]*ptheta2[1]*sqrt(1-pow(prho2, 2));
+      termp1_1 = pow(termp1_1, -1);
+      termp2_1 = pow(termp2_1, -1);
+      float termp1_2 = -1*(1/(2*(1-pow(prho1, 2))));
+      float termp2_2 = -1*(1/(2*(1-pow(prho2, 2))));
+      for (int x = 0; x < (int)0.5*w; x++) {
+        for (int y = 0; y < h; y++) {
+          float t1 = pow(x-pmiu1[0], 2)/pow(ptheta1[0], 2);
+          t1 = t1- ((2*prho1*(x-pmiu1[0])*(y-pmiu1[1]))/(ptheta1[0]*ptheta1[1]));
+          t1 = t1 + (pow(y-pmiu1[1], 2)/pow(ptheta1[1], 2));
+          t1 = t1 * termp1_2;
+          t1 = exp(t1);
+          float d1 = termp1_1 * t1;
+          int zoomd1 = (int)map(d1, 0, 0.159, 0, 255);
+          //int zoomd1 = (int) d1;
+          sugartable[x][y] = zoomd1*10;
+          sugartable_iter[x][y] = zoomd1*10;
+        }
+      }
+      for (int x = (int)0.5*w; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+          float b1 = pow(x-pmiu2[0], 2)/pow(ptheta2[0], 2);
+          b1 = b1- ((2*prho2*(x-pmiu2[0])*(y-pmiu2[1]))/(ptheta2[0]*ptheta2[1]));
+          b1 = b1 + (pow(y-pmiu2[1], 2)/pow(ptheta1[1], 2));
+          b1 = b1 * termp2_2;
+          b1 = exp(b1);
+          float a1 = termp2_1 * b1;
+          int zoomd2 = (int)map(a1, 0, 0.159, 0, 255);
+          //int zoomd2 = (int) a1;
+          sugartable[x][y] = zoomd2*10;
+          sugartable_iter[x][y] = zoomd2*10;
+        }
+      }
+      
+      
+    }
+  
+    
   }
+  
   //return the sugar amount at speicified location.
   int getSugarValue(int locx, int locy) {
     locx = constrain(locx, 0, width_sugar-1);
@@ -331,8 +378,8 @@ class agentSystem {
   
 }
 
-sugarscape sugartest = new sugarscape(50, 50, 1);
-agentSystem a = new agentSystem(10);
+sugarscape sugartest = new sugarscape(50, 50, 3);
+agentSystem a = new agentSystem(250);
 
 int xoff = 20; int yoff = 20;
 void setup() {
