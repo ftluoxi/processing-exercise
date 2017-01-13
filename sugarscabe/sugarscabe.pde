@@ -230,10 +230,10 @@ class sugarscape {
     
     if (type == 3) {//bivariate normalize distribution
       int[] pmiu1 = {(int) random(0.2*w, 0.5*w), (int) random(0.2*h, 0.8*h)};
-      int[] ptheta1 = {1, 1};
+      float[] ptheta1 = {0.2*w, 0.2*w};
       float prho1 = 0;
       int[] pmiu2 = {(int) random(0.5*w, 0.8*w), (int) random(0.2*h, 0.8*h)};
-      int[] ptheta2 = {1, 1};
+      float[] ptheta2 = {0.2*w, 0.2*w};
       float prho2 = 0;
       float termp1_1 = 2*PI*ptheta1[0]*ptheta1[1]*sqrt(1-pow(prho1, 2));
       float termp2_1 = 2*PI*ptheta2[0]*ptheta2[1]*sqrt(1-pow(prho2, 2));
@@ -241,7 +241,7 @@ class sugarscape {
       termp2_1 = pow(termp2_1, -1);
       float termp1_2 = -1*(1/(2*(1-pow(prho1, 2))));
       float termp2_2 = -1*(1/(2*(1-pow(prho2, 2))));
-      for (int x = 0; x < (int)0.5*w; x++) {
+      for (int x = 0; x < (int)(0.5*w); x++) {
         for (int y = 0; y < h; y++) {
           float t1 = pow(x-pmiu1[0], 2)/pow(ptheta1[0], 2);
           t1 = t1- ((2*prho1*(x-pmiu1[0])*(y-pmiu1[1]))/(ptheta1[0]*ptheta1[1]));
@@ -249,13 +249,14 @@ class sugarscape {
           t1 = t1 * termp1_2;
           t1 = exp(t1);
           float d1 = termp1_1 * t1;
-          int zoomd1 = (int)map(d1, 0, 0.159, 0, 255);
+          d1 = d1*10000;
+          int zoomd1 = (int)map(d1, 0, 18, 0, 255);
           //int zoomd1 = (int) d1;
-          sugartable[x][y] = zoomd1*10;
-          sugartable_iter[x][y] = zoomd1*10;
+          sugartable[x][y] = zoomd1;
+          sugartable_iter[x][y] = zoomd1;
         }
       }
-      for (int x = (int)0.5*w; x < w; x++) {
+      for (int x = (int)(0.5*w); x < w; x++) {
         for (int y = 0; y < h; y++) {
           float b1 = pow(x-pmiu2[0], 2)/pow(ptheta2[0], 2);
           b1 = b1- ((2*prho2*(x-pmiu2[0])*(y-pmiu2[1]))/(ptheta2[0]*ptheta2[1]));
@@ -263,10 +264,11 @@ class sugarscape {
           b1 = b1 * termp2_2;
           b1 = exp(b1);
           float a1 = termp2_1 * b1;
-          int zoomd2 = (int)map(a1, 0, 0.159, 0, 255);
+          a1 = a1*10000;
+          int zoomd2 = (int)map(a1, 0, 18, 0, 255);
           //int zoomd2 = (int) a1;
-          sugartable[x][y] = zoomd2*10;
-          sugartable_iter[x][y] = zoomd2*10;
+          sugartable[x][y] = zoomd2;
+          sugartable_iter[x][y] = zoomd2;
         }
       }
       
@@ -379,7 +381,7 @@ class agentSystem {
 }
 
 sugarscape sugartest = new sugarscape(50, 50, 3);
-agentSystem a = new agentSystem(250);
+agentSystem a = new agentSystem(10);
 
 int xoff = 20; int yoff = 20;
 void setup() {
