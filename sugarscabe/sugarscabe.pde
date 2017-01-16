@@ -161,6 +161,7 @@ class sugarscape {
   int[][] sugartable_iter;
   int width_sugar;
   int height_sugar;
+  PrintWriter smap;
   /*initialize sugarscape with some user-specified params
   int w: the weight of sugarscape
   int h:the heght of sugarscape
@@ -177,7 +178,9 @@ class sugarscape {
     if (type == 0) {//random sugarscape
       for (int x = 0; x < w; x++){
         for (int y = 0; y < h; y++) {
-          sugartable[x][y] = (int)random(0, 256);
+          float perlin = noise(x, y);
+          perlin = map(perlin, 0, 1, 0, 256);
+          sugartable[x][y] = (int)perlin;
           sugartable_iter[x][y] = sugartable[x][y];
         }
       }
@@ -305,9 +308,21 @@ class sugarscape {
         fill(255-getSugarValue(x, y));
         ellipse(10*x, 10*y, 10, 10);
       }
-    }
-    
+    }  
   }
+  
+  void writeSugarmap() {
+    smap = createWriter("map.txt");
+    for (int r = 0; r < width_sugar; r++) {
+      for (int c = 0; c < height_sugar; c++) {
+        smap.print(sugartable[r][c]+",");
+      }
+      smap.print("\n");
+    }
+    smap.flush();
+    smap.close();
+  }
+  
 }
 
 class agentSystem {
@@ -385,6 +400,7 @@ agentSystem a = new agentSystem(250);
 
 int xoff = 20; int yoff = 20;
 void setup() {
+  sugartest.writeSugarmap();
   frameRate(30);
   //print(a.locx, a.locy, a.sugarbag, "\n");
   size(500, 500);
