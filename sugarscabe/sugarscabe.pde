@@ -380,13 +380,8 @@ class agentSystem {
   
 }
 
-<<<<<<< HEAD
 sugarscape sugartest = new sugarscape(50, 50, 0);
 agentSystem a = new agentSystem(250);
-=======
-sugarscape sugartest = new sugarscape(50, 50, 3);
-agentSystem a = new agentSystem(10);
->>>>>>> e40dc9db8f4ad34db1261ca6fecb0e647d059020
 
 int xoff = 20; int yoff = 20;
 void setup() {
