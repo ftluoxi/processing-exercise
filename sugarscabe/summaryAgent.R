@@ -126,12 +126,69 @@ summaryAgent <- function(file = "agentslog.txt"){
     if (exit) {
       plot(alive$rounds, alive$sugarbag, col = "red", type = "l", lwd = 2, xlab = "rounds", 
            ylab = "sugarbag", main = paste( "Alive agent ID:", alive.ID))
+      alivefeature <- alive[1, 5:7]
+      alivem <- paste("Vision:", alivefeature$vision, "Stomach:", alivefeature$stomach, 
+                      "Step:", alivefeature$step)
+      #legend(x = "topright", inset = c(1, 1), legend = alivem, bty = "n")
       plot(dead$rounds, dead$sugarbag, col = "blue", type = "l", lwd = 2, xlab = "rounds", 
            ylab = "sugarbag", main = paste("Dead agent ID:", dead.ID))
+      deadfeature <- dead[1, 5:7]
+      deadm <- paste("Vision", deadfeature$vision, "Stomach:", deadfeature$stomach, 
+                     "Step:", deadfeature$step)
+      #legend(x = "bottomright", inset = c(1, 1), legend = deadm, bty = "n" )
     }
     par(mfrow = c(1,1))
   }
-  cat("All job done, press any to exit!\n")
+  cat("Press any to continue\n")
+  readline()
+  invisible()
+  cat("4.Sugar distribution\n")
+  cat("1.all in one graph\n2.seperate in each graph\n")
+  sugarbag.0 <- agentslog[agentslog$rounds == 1, ]$sugarbag
+  sugarbag.0.25 <- agentslog[agentslog$rounds == floor(max(agentslog$rounds)*0.25), ]$sugarbag
+  sugarbag.0.75 <- agentslog[agentslog$rounds == floor(max(agentslog$rounds)*0.75), ]$sugarbag
+  sugarbag.1 <- agentslog[agentslog$rounds == max(agentslog$rounds), ]$sugarbag
+  exit = FALSE
+  while (!exit) {
+    answer4 = readline()
+    if (substr(answer4, 1, 1) == "1") {
+      par(mfrow = c(2, 2))
+      exit = TRUE
+    }
+    else if (substr(answer4, 1, 1) == "2") {
+      par(mfrow = c(1, 1))
+      exit = TRUE
+    }
+    else if (sum(substr(answer4, 1, 1) == c("1", "2"))==0) {
+      cat("enter right numbers!\n")
+      exit = FALSE
+    }
+    if (exit) {
+      hist(sugarbag.0, main = "Sugar distribution at 1st rounds", col = "steelblue",xlab = "Sugar amount", 
+           freq = F)
+      lines(density(sugarbag.0), col = "red", lwd = 2)
+      rug(jitter(sugarbag.0), col = "red", ticksize = 0.01, lwd = 0.01, quiet = T)
+      
+      hist(sugarbag.0.25, main = "Sugar distribution at 25% rounds", col = "steelblue", xlab = "Sugar amount", 
+           freq = F)
+      lines(density(sugarbag.0.25), col = "red", lwd = 2)
+      rug(jitter(sugarbag.0.25), col = "red", ticksize = 0.01, lwd = 0.01, quiet = T)
+      
+      hist(sugarbag.0.75, main = "Sugar distribution at 75% rounds", col = "steelblue", xlab = "Sugar amount", 
+           freq = F)
+      lines(density(sugarbag.0.75), col = "red", lwd = 2)
+      rug(jitter(sugarbag.0.75), col = "red", ticksize = 0.01, lwd = 0.01, quiet = T)
+      
+      hist(sugarbag.1, main = "Sugar distribution at last rounds", col = "steelblue", xlab = "Sugar amount", 
+           freq = F)
+      lines(density(sugarbag.1), col = "red", lwd = 2)
+      rug(jitter(sugarbag.1), col = "red", ticksize = 0.01, lwd = 0.01, quiet = T)
+      
+    }
+    par(mfrow = c(1, 1))
+  }
+  
+  cat("All job done!\nPress any to exit\n")
   readline()
   invisible()
 }

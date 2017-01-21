@@ -19,7 +19,7 @@ class agent{
     location:locx,locy, the location of an agent born in sugarscabe
     id:to identify an agent
   */
-  agent(){
+  agent(int id_u){
     vision = (int)random(2, 11);
     stomach = (int)random(2, 11);
     step = (int)random(2, 11);
@@ -27,7 +27,7 @@ class agent{
     locy = (int)random(100, 500)/10;
     status = 1;
     sugarbag = (int)random(11, 20);
-    id = (int) random(10, 1500);
+    id = id_u;
   }
   
   void updateStatus() {
@@ -335,7 +335,7 @@ class agentSystem {
     agents = new ArrayList<agent>();
     N = size;
     for (int i=0; i < N; i++) {
-      agents.add(new agent());
+      agents.add(new agent(i+1));
     }
     rounds = 1;
   }
@@ -395,8 +395,8 @@ class agentSystem {
   
 }
 
-sugarscape sugartest = new sugarscape(50, 50, 0);
-agentSystem a = new agentSystem(250);
+sugarscape sugartest = new sugarscape(50, 50, 3);
+agentSystem a = new agentSystem(1000);
 
 int xoff = 20; int yoff = 20;
 void setup() {
